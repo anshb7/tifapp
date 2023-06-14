@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:intl/intl.dart';
-import 'package:tifapp/event.dart';
-import 'package:tifapp/eventAPI.dart';
 import 'package:tifapp/eventdetails.dart';
 
-class ListCard extends StatelessWidget {
-  ListCard(
+class SearchCard extends StatelessWidget {
+  SearchCard(
       {super.key,
-      required this.id,
       required this.banner_image,
       required this.date_time,
+      required this.description,
+      required this.organiser_icon,
+      required this.organiser_name,
       required this.title,
       required this.venue_city,
       required this.venue_country,
@@ -21,45 +21,31 @@ class ListCard extends StatelessWidget {
   String description = "";
   String banner_image = "";
   String date_time;
-
+  String organiser_name = "";
+  String organiser_icon = "";
   String venue_name = "";
   String venue_city = "";
   String venue_country = "";
-  int id = 0;
-
-  late Event? event = Event(
-      id: 0,
-      title: "",
-      banner_image: "",
-      date_time: "",
-      description: "",
-      organiser_icon: "",
-      organiser_name: "",
-      venue_city: "",
-      venue_country: "",
-      venue_name: "");
 
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(
-          onTap: () async {
-            event = await eventAPI().getEventDetails(id.toString());
-            Future.delayed(Duration(seconds: 1));
+          onTap: () {
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => EventDetails(
-                        banner_image: event!.banner_image,
-                        date_time: event!.date_time,
-                        description: event!.description,
-                        organiser_icon: event!.organiser_icon,
-                        organiser_name: event!.organiser_name,
-                        title: event!.title,
-                        venue_city: event!.venue_city,
-                        venue_country: event!.venue_country,
-                        venue_name: event!.venue_name)));
+                        banner_image: banner_image,
+                        date_time: date_time,
+                        description: description,
+                        organiser_icon: organiser_icon,
+                        organiser_name: organiser_name,
+                        title: title,
+                        venue_city: venue_city,
+                        venue_country: venue_country,
+                        venue_name: venue_name)));
           },
           child: Card(
             elevation: 5,
@@ -87,7 +73,7 @@ class ListCard extends StatelessWidget {
                     padding: EdgeInsets.all(8),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Flexible(
@@ -95,16 +81,13 @@ class ListCard extends StatelessWidget {
                                 "${DateFormat('EE,d MMM').format(DateTime.parse(date_time))}•${DateFormat('h:mm a').format(DateTime.parse(date_time))}",
                                 style: Theme.of(context).textTheme.labelSmall),
                           ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02,
+                          ),
                           Flexible(
                             child: Text(
                               title,
                               style: Theme.of(context).textTheme.headlineMedium,
-                            ),
-                          ),
-                          Flexible(
-                            child: Text(
-                              """${venue_name}, ${venue_city}, ${venue_country}""",
-                              style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
                         ]),

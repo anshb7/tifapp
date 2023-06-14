@@ -4,6 +4,8 @@ import 'package:tifapp/apicall.dart';
 import 'package:tifapp/card.dart';
 import 'package:tifapp/event.dart';
 import 'package:tifapp/eventdetails.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+import 'package:tifapp/searchresults.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +22,20 @@ class _MyAppState extends State<MyApp> {
   @override //rgb(87 105 255)
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        '/': (context) => MyHomePage(), //StudentLogin(),
+        //Splash(), //islogin ? coachDashboard() : landingpage(),
+        '/searchEvent': (context) => searchEvent(),
+      },
+      builder: (context, child) => ResponsiveBreakpoints.builder(
+        child: child!,
+        breakpoints: [
+          const Breakpoint(start: 0, end: 450, name: MOBILE),
+          const Breakpoint(start: 451, end: 800, name: TABLET),
+          const Breakpoint(start: 801, end: 1920, name: DESKTOP),
+          const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
+        ],
+      ),
       title: 'Flutter Demo',
       theme: ThemeData(
         iconButtonTheme: IconButtonThemeData(
@@ -27,6 +43,11 @@ class _MyAppState extends State<MyApp> {
                 iconColor: MaterialStateProperty.all<Color>(Colors.black),
                 iconSize: MaterialStatePropertyAll(16))),
         textTheme: TextTheme(
+            displayMedium: TextStyle(
+                fontFamily: "Inter",
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.w500),
             headlineLarge: TextStyle(
               fontFamily: "Inter",
               fontSize: 35,
@@ -37,6 +58,11 @@ class _MyAppState extends State<MyApp> {
               fontSize: 13,
               color: Color.fromRGBO(87, 105, 255, 1),
             ),
+            headlineSmall: TextStyle(
+                fontFamily: "Inter",
+                fontSize: 15,
+                color: Colors.black,
+                fontWeight: FontWeight.w500),
             headlineMedium: TextStyle(
                 fontFamily: "Inter",
                 fontSize: 15,
@@ -60,7 +86,6 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSwatch().copyWith(
             secondary: Color.fromRGBO(87, 105, 255, 1), primary: Colors.white),
       ),
-      home: EventDetails(),
     );
   }
 }
@@ -91,9 +116,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, "/searchEvent");
+              },
               icon: Icon(
                 Icons.search_rounded,
                 color: Colors.black,
@@ -118,7 +146,8 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
           child: ListView.builder(
         itemBuilder: (BuildContext context, int index) => ListCard(
-          imageUrl: events![index].banner_image,
+          id: events![index].id,
+          banner_image: events![index].banner_image,
           date_time: events![index].date_time,
           title: events![index].title,
           venue_name: events![index].venue_name,
