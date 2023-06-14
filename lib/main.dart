@@ -3,6 +3,7 @@ import 'package:flutter/semantics.dart';
 import 'package:tifapp/apicall.dart';
 import 'package:tifapp/card.dart';
 import 'package:tifapp/event.dart';
+import 'package:tifapp/eventdetails.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,6 +27,11 @@ class _MyAppState extends State<MyApp> {
                 iconColor: MaterialStateProperty.all<Color>(Colors.black),
                 iconSize: MaterialStatePropertyAll(16))),
         textTheme: TextTheme(
+            headlineLarge: TextStyle(
+              fontFamily: "Inter",
+              fontSize: 35,
+              color: Colors.black,
+            ),
             labelSmall: TextStyle(
               fontFamily: "Inter",
               fontSize: 13,
@@ -35,12 +41,17 @@ class _MyAppState extends State<MyApp> {
                 fontFamily: "Inter",
                 fontSize: 15,
                 color: Colors.black,
-                fontWeight: FontWeight.bold),
+                fontWeight: FontWeight.w400),
             titleMedium: TextStyle(
-              fontFamily: "Inter",
-              fontSize: 13,
-              color: Colors.grey,
-            ),
+                fontFamily: "Inter",
+                fontSize: 13,
+                color: Colors.grey,
+                fontWeight: FontWeight.w400),
+            titleSmall: TextStyle(
+                fontFamily: "Inter",
+                fontSize: 24,
+                color: Colors.white,
+                fontWeight: FontWeight.bold),
             titleLarge: TextStyle(
                 fontFamily: "Inter",
                 fontSize: 24,
@@ -49,7 +60,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSwatch().copyWith(
             secondary: Color.fromRGBO(87, 105, 255, 1), primary: Colors.white),
       ),
-      home: const MyHomePage(),
+      home: EventDetails(),
     );
   }
 }
@@ -110,9 +121,11 @@ class _MyHomePageState extends State<MyHomePage> {
           imageUrl: events![index].banner_image,
           date_time: events![index].date_time,
           title: events![index].title,
-          location: events![index].venue_city,
+          venue_name: events![index].venue_name,
+          venue_city: events![index].venue_city,
+          venue_country: events![index].venue_country,
         ),
-        itemCount: 5,
+        itemCount: events!.length,
 
         ///events!.length,
         scrollDirection: Axis.vertical,

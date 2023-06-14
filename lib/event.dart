@@ -5,7 +5,7 @@ class Event with ChangeNotifier {
   String title = "";
   String description = "";
   String banner_image = "";
-  String date_time = "";
+  String date_time;
   String organiser_name = "";
   String organiser_icon = "";
   String venue_name = "";

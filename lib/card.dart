@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:intl/intl.dart';
 
 class ListCard extends StatelessWidget {
   ListCard(
@@ -8,12 +9,16 @@ class ListCard extends StatelessWidget {
       required this.imageUrl,
       required this.date_time,
       required this.title,
-      required this.location});
+      required this.venue_name,
+      required this.venue_city,
+      required this.venue_country});
 
   String imageUrl;
   String date_time;
   String title;
-  String location;
+  String venue_name;
+  String venue_city;
+  String venue_country;
 
   @override
   Widget build(BuildContext context) {
@@ -42,23 +47,26 @@ class ListCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(date_time,
-                            style: Theme.of(context).textTheme.labelSmall),
-                        Text(
-                          title,
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                        Text(
-                          location,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                      ]),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                              "${DateFormat('EE,d MMM').format(DateTime.parse(date_time))}•${DateFormat('h:mm a').format(DateTime.parse(date_time))}",
+                              style: Theme.of(context).textTheme.labelSmall),
+                          Text(
+                            title,
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                          Text(
+                            """${venue_name}, ${venue_city}, ${venue_country}""",
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ]),
+                  ),
                 )
               ]),
             ),

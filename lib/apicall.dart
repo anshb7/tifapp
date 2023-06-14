@@ -6,17 +6,6 @@ import 'dart:convert';
 class apiCall {
   Future<List<Event>?> getEvents() async {
     try {
-      Event event = Event(
-          id: 0,
-          title: "",
-          banner_image: "",
-          date_time: "",
-          description: "",
-          organiser_icon: "",
-          organiser_name: "",
-          venue_city: "",
-          venue_country: "",
-          venue_name: "");
       var url = "https://sde-007.api.assignment.theinternetfolks.works";
       final response = await http.get(Uri.parse(url + "/v1/event"), headers: {
         "Content-Type": "application/json; charset=utf-8",
