@@ -63,10 +63,10 @@ class ListCard extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(MediaQuery.of(context).padding.top),
                     child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Flexible(
@@ -88,7 +88,7 @@ class ListCard extends StatelessWidget {
                           ),
                         ]),
                   ),
-                )
+                ),
               ]),
             ),
           ),

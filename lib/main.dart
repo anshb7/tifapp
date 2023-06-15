@@ -22,6 +22,7 @@ class _MyAppState extends State<MyApp> {
   @override //rgb(87 105 255)
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       routes: {
         '/': (context) => MyHomePage(), //StudentLogin(),
         //Splash(), //islogin ? coachDashboard() : landingpage(),
