@@ -27,39 +27,20 @@ class ListCard extends StatelessWidget {
   String venue_country = "";
   int id = 0;
 
-  late Event? event = Event(
-      id: 0,
-      title: "",
-      banner_image: "",
-      date_time: "",
-      description: "",
-      organiser_icon: "",
-      organiser_name: "",
-      venue_city: "",
-      venue_country: "",
-      venue_name: "");
-
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(
           onTap: () async {
-            event = await eventAPI().getEventDetails(id.toString());
             Future.delayed(Duration(seconds: 1));
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => EventDetails(
-                        banner_image: event!.banner_image,
-                        date_time: event!.date_time,
-                        description: event!.description,
-                        organiser_icon: event!.organiser_icon,
-                        organiser_name: event!.organiser_name,
-                        title: event!.title,
-                        venue_city: event!.venue_city,
-                        venue_country: event!.venue_country,
-                        venue_name: event!.venue_name)));
+                          id: id,
+                          banner_image: banner_image,
+                        )));
           },
           child: Card(
             elevation: 5,

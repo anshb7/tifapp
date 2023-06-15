@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
             style: ButtonStyle(
                 iconColor: MaterialStateProperty.all<Color>(Colors.black),
                 iconSize: MaterialStatePropertyAll(16))),
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
             displayMedium: TextStyle(
                 fontFamily: "Inter",
                 fontSize: 18,
@@ -98,18 +98,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late List<Event>? events = [];
+  EventsBloc events = EventsBloc();
 
   @override
   void initState() {
-    _getData();
+    setState(() {});
+    events.getEvents();
     super.initState();
+    setState(() {});
   }
 
-  void _getData() async {
-    events = await apiCall().getEvents();
-    Future.delayed(Duration(seconds: 1));
-    setState(() {});
+  @override
+  void dispose() {
+    events.dispose();
+    super.dispose();
   }
 
   @override
@@ -143,22 +145,36 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      body: Center(
-          child: ListView.builder(
-        itemBuilder: (BuildContext context, int index) => ListCard(
-          id: events![index].id,
-          banner_image: events![index].banner_image,
-          date_time: events![index].date_time,
-          title: events![index].title,
-          venue_name: events![index].venue_name,
-          venue_city: events![index].venue_city,
-          venue_country: events![index].venue_country,
-        ),
-        itemCount: events!.length,
+      body: StreamBuilder<List<Event>>(
+          stream: events.eventListStream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final datas = snapshot.data;
+              return Center(
+                  child: ListView.builder(
+                itemBuilder: (BuildContext context, int index) => ListCard(
+                  id: datas[index].id,
+                  banner_image: datas[index].banner_image,
+                  date_time: datas[index].date_time,
+                  title: datas[index].title,
+                  venue_name: datas[index].venue_name,
+                  venue_city: datas[index].venue_city,
+                  venue_country: datas[index].venue_country,
+                ),
+                itemCount: datas!.length,
 
-        ///events!.length,
-        scrollDirection: Axis.vertical,
-      )),
+                ///events!.length,
+                scrollDirection: Axis.vertical,
+              ));
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              return Center(
+                  child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.secondary,
+              ));
+            }
+          }),
     );
   }
 }

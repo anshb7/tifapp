@@ -40,6 +40,7 @@ dependencies:
   responsive_framework: ^1.0.0
   animated_button: ^0.2.0
   bloc: ^8.1.2
+  connectivity: ^3.0.6
 
 dev_dependencies:
   flutter_test:

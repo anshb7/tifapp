@@ -5,33 +5,40 @@ import 'package:tifapp/event.dart';
 import 'package:http/http.dart' as http;
 import 'package:tifapp/searchcard.dart';
 import 'dart:convert';
+import 'dart:async';
 import 'card.dart';
 
-class searchResult {
-  Future<List<Event>> getSearchEvents(String s) async {
+class SearchEventBloc {
+  final _searchEventController = StreamController<List<Event>>();
+
+  Stream<List<Event>> get searchEventStream => _searchEventController.stream;
+
+  Future<void> getSearchEvents(String searchQuery) async {
     var url = "https://sde-007.api.assignment.theinternetfolks.works";
-    final response =
-        await http.get(Uri.parse(url + "/v1/event?search=${s}"), headers: {
+    final response = await http
+        .get(Uri.parse(url + "/v1/event?search=$searchQuery"), headers: {
       "Content-Type": "application/json; charset=utf-8",
       "Date": "Fri, 24 Mar 2023 10:58:52 GMT",
     });
 
-    List<Event> ans = [];
+    List<Event> searchResults = [];
     try {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         List<dynamic> events = data['content']['data'];
-        for (var i in events) {
-          Event eventt = Event.fromJson(i);
-          ans.add(eventt);
-        }
+        searchResults =
+            events.map((eventData) => Event.fromJson(eventData)).toList();
       } else {
         print(response.statusCode);
       }
     } catch (e) {
       print(e);
     }
-    return ans;
+    _searchEventController.add(searchResults);
+  }
+
+  void dispose() {
+    _searchEventController.close();
   }
 }
 
@@ -43,11 +50,11 @@ class searchEvent extends StatefulWidget {
 }
 
 class _searchEventState extends State<searchEvent> {
-  ScrollController _controller = new ScrollController();
-  late List<Event> events = [];
+  SearchEventBloc searchevent = SearchEventBloc();
+
   TextEditingController search = TextEditingController();
   void _getData(String s) async {
-    events = await searchResult().getSearchEvents(s);
+    searchevent.getSearchEvents(s);
     Future.delayed(Duration(seconds: 1));
     setState(() {});
   }
@@ -98,31 +105,33 @@ class _searchEventState extends State<searchEvent> {
                             cursorColor: Color.fromRGBO(7, 7, 9, 1),
                           )),
                     )),
-            events.isEmpty
-                ? Center(child: Text("NO DATA TO SHOW!"))
-                : OrientationBuilder(
-                    builder: (context, orientation) => ListView.builder(
-                      controller: _controller,
+            StreamBuilder<List<Event>>(
+                stream: searchevent.searchEventStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final data = snapshot.data;
+                    return ListView.builder(
                       physics: ClampingScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (BuildContext context, int index) =>
                           SearchCard(
-                        organiser_icon: events[index].organiser_icon,
-                        organiser_name: events[index].organiser_name,
-                        description: events[index].description,
-                        banner_image: events[index].banner_image,
-                        date_time: events[index].date_time,
-                        title: events[index].title,
-                        venue_name: events[index].venue_name,
-                        venue_city: events[index].venue_city,
-                        venue_country: events[index].venue_country,
+                        id: data[index].id,
+                        banner_image: data[index].banner_image,
+                        date_time: data[index].date_time,
+                        title: data[index].title,
                       ),
-                      itemCount: events.length,
+                      itemCount: data!.length,
 
                       ///events!.length,
                       scrollDirection: Axis.vertical,
-                    ),
-                  ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return Center(
+                        child: Text("NO DATA TO SHOW,SEARCH SOMETHING UP!"));
+                  }
+                }),
           ],
         ),
       ),
