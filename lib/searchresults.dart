@@ -63,6 +63,12 @@ class _searchEventState extends State<searchEvent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_outlined),
+          color: Colors.black,
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Align(
           alignment: Alignment.bottomLeft,
           child: Text(
