@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
 import 'package:intl/intl.dart';
-import 'package:tifapp/event.dart';
-import 'package:tifapp/eventAPI.dart';
+
 import 'package:tifapp/eventdetails.dart';
 
 class ListCard extends StatelessWidget {
